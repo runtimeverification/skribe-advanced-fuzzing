@@ -15,13 +15,8 @@ $ skribe-shell
 ```
 
 ```bash
-$ cd /home/user/deps/skribe
-$ make kdist
-```
-
-```bash
-$ cd /home/user/deps/9lives
+$ cd 9lives
 $ ./build-skribe.sh
-$ uv --project ../skribe run skribe build
-$ uv --project ../skribe run skribe run
+$ skribe build
+$ skribe run
 ```

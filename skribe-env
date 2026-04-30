@@ -1,19 +1,24 @@
-#!/usr/bin/env bash
+SKRIBE_PATH=deps/skribe
+CONTRACT_PATH=deps/9lives
 
 DOCKERFILE=./Dockerfile
-VERSION=$(cat deps/skribe/package/version)
+VERSION=$(cat "${SKRIBE_PATH}/package/version")
 TAG=runtimeverificationinc/skribe:v${VERSION}
 CONTAINER=skribe
-K_VERSION=$(cat deps/skribe/deps/k_release)
-UV_VERSION=$(cat deps/skribe/deps/uv_release)
+K_VERSION=$(cat "${SKRIBE_PATH}/deps/k_release")
+UV_VERSION=$(cat "${SKRIBE_PATH}/deps/uv_release")
 
 skribe-build() (
   set -euxo pipefail
-  docker build .                         \
-    --file "${DOCKERFILE}"               \
-    --tag "${TAG}"                       \
-    --build-arg K_VERSION="${K_VERSION}" \
-    --build-arg UV_VERSION="${UV_VERSION}"
+
+  skribe_dist=$(uv --project "${SKRIBE_PATH}" build 2>&1 | grep '\.whl$' | awk '{print $3}')
+
+  docker build .                           \
+    --file "${DOCKERFILE}"                 \
+    --tag "${TAG}"                         \
+    --build-arg K_VERSION="${K_VERSION}"   \
+    --build-arg UV_VERSION="${UV_VERSION}" \
+    --build-arg SKRIBE_DIST="${skribe_dist}"
 )
 
 skribe-start() (
@@ -28,7 +33,7 @@ skribe-start() (
     --workdir /home/user  \
     "${TAG}"
   # Copy files while setting ownership to match the guest. Why `-a` works: https://github.com/docker/cli/issues/6870.
-  docker cp --archive . "${CONTAINER}:/home/user"
+  docker cp --archive "${CONTRACT_PATH}" "${CONTAINER}:/home/user"
 )
 
 skribe-stop() (

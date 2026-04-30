@@ -25,7 +25,7 @@ WORKDIR /home/user
 ENV PATH=/home/user/.local/bin:${PATH}
 
 ARG UV_VERSION
-RUN curl -LsSf https://astral.sh/uv/$UV_VERSION/install.sh | sh \
+RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | sh \
  && uv --version
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -39,3 +39,11 @@ RUN rustup target add wasm32-unknown-unknown --toolchain 1.85.0
 RUN curl -L https://foundry.paradigm.xyz | bash
 ENV PATH="/home/user/.foundry/bin:${PATH}"
 RUN foundryup
+
+ARG SKRIBE_DIST
+COPY ${SKRIBE_DIST} .
+RUN pip install --break-system-packages *.whl \
+ && rm *.whl
+
+RUN kdist --verbose build stylus-semantics.* \
+ && skribe --help
