@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+DOCKERFILE=./Dockerfile
+VERSION=$(cat deps/skribe/package/version)
+TAG=runtimeverificationinc/skribe:v${VERSION}
+CONTAINER=skribe
+K_VERSION=$(cat deps/skribe/deps/k_release)
+UV_VERSION=$(cat deps/skribe/deps/uv_release)
+
+skribe-build() (
+  set -euxo pipefail
+  docker build .                         \
+    --file "${DOCKERFILE}"               \
+    --tag "${TAG}"                       \
+    --build-arg K_VERSION="${K_VERSION}" \
+    --build-arg UV_VERSION="${UV_VERSION}"
+)
+
+skribe-start() (
+  set -euxo pipefail
+  docker run              \
+    --name "${CONTAINER}" \
+    --rm                  \
+    --interactive         \
+    --tty                 \
+    --detach              \
+    --user user           \
+    --workdir /home/user  \
+    "${TAG}"
+  # Copy files while setting ownership to match the guest. Why `-a` works: https://github.com/docker/cli/issues/6870.
+  docker cp --archive . "${CONTAINER}:/home/user"
+)
+
+skribe-stop() (
+  set -euxo pipefail
+  docker rm --force "${CONTAINER}" >/dev/null 2>&1
+)
+
+skribe-exec() (
+  set -euxo pipefail
+  docker exec --interactive --tty "${CONTAINER}" /bin/bash -lc "$*"
+)
+
+skribe-shell() (
+  set -euxo pipefail
+  docker attach "${CONTAINER}"
+)

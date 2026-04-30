@@ -1,0 +1,6 @@
+[submodule "deps/skribe"]
+	path = deps/skribe
+	url = https://github.com/runtimeverification/skribe.git
+[submodule "deps/9lives"]
+	path = deps/9lives
+	url = https://github.com/runtimeverification/skribe_9lives.so.git
