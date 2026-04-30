@@ -8,7 +8,6 @@ RUN    apt-get -y update             \
          libsecp256k1-dev            \
          software-properties-common  \
          wabt                        \
-         binaryen                    \
     && apt-get -y clean              \
     && add-apt-repository ppa:ethereum/ethereum \
     && apt-get update                \
@@ -32,7 +31,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 ENV PATH="/home/user/.cargo/bin:${PATH}"
 
-RUN cargo install --force cargo-stylus
+RUN cargo install cargo-stylus wasm-opt
 RUN rustup default 1.85.0
 RUN rustup target add wasm32-unknown-unknown --toolchain 1.85.0
 
