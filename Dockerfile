@@ -44,5 +44,5 @@ COPY ${SKRIBE_DIST} .
 RUN pip install --break-system-packages *.whl \
  && rm *.whl
 
-RUN kdist --verbose build stylus-semantics.* \
+RUN kdist --verbose build -j2 stylus-semantics.* \
  && skribe --help
