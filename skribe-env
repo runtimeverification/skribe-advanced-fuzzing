@@ -38,6 +38,7 @@ skribe-start() (
   docker exec "${CONTAINER}" mkdir /home/user/skribe/skribe-fuzz-rs/.cargo
   docker cp --archive config.toml "${CONTAINER}:/home/user/skribe/skribe-fuzz-rs/.cargo/"
   docker exec "${CONTAINER}" /bin/bash -c 'cd skribe/skribe-fuzz-rs && KLLVM_LIBRARY_PATH=$(kdist which stylus-semantics.llvm-library) cargo test'
+  docker exec "${CONTAINER}" /bin/bash -c 'cd skribe/skribe-fuzz-rs/fuzz && KLLVM_LIBRARY_PATH=$(kdist which stylus-semantics.llvm-library) cargo +nightly fuzz build'
 )
 
 skribe-stop() (

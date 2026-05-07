@@ -31,7 +31,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 ENV PATH="/home/user/.cargo/bin:${PATH}"
 
-RUN cargo install cargo-stylus wasm-opt
+RUN cargo install cargo-fuzz cargo-stylus wasm-opt
 RUN rustup default 1.85.0
 RUN rustup target add wasm32-unknown-unknown --toolchain 1.85.0
 
