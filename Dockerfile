@@ -27,12 +27,14 @@ ARG UV_VERSION
 RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | sh \
  && uv --version
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.95.0 -y
 
 ENV PATH="/home/user/.cargo/bin:${PATH}"
 
-RUN cargo install cargo-stylus wasm-opt
-RUN rustup default 1.85.0
+RUN cargo install cargo-fuzz cargo-stylus wasm-opt
+
+# Rust version used by the 9lives contract
+RUN rustup install 1.85.0
 RUN rustup target add wasm32-unknown-unknown --toolchain 1.85.0
 
 RUN curl -L https://foundry.paradigm.xyz | bash

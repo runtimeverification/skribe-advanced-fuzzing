@@ -32,22 +32,28 @@ skribe-start() (
     --user user           \
     --workdir /home/user  \
     "${TAG}"
+
   # Copy files while setting ownership to match the guest. Why `-a` works: https://github.com/docker/cli/issues/6870.
   docker cp --archive deps/. "${CONTAINER}:/home/user/"
+  docker cp --archive test.sh "${CONTAINER}:/home/user/"
 
-  docker exec "${CONTAINER}" mkdir /home/user/skribe/skribe-fuzz-rs/.cargo
+  skribe-exec mkdir /home/user/skribe/skribe-fuzz-rs/.cargo
   docker cp --archive config.toml "${CONTAINER}:/home/user/skribe/skribe-fuzz-rs/.cargo/"
-  docker exec "${CONTAINER}" /bin/bash -c 'cd skribe/skribe-fuzz-rs && KLLVM_LIBRARY_PATH=$(kdist which stylus-semantics.llvm-library) cargo test'
-)
-
-skribe-stop() (
-  set -euxo pipefail
-  docker rm --force "${CONTAINER}" >/dev/null 2>&1
 )
 
 skribe-exec() (
   set -euxo pipefail
   docker exec --interactive --tty "${CONTAINER}" /bin/bash -lc "$*"
+)
+
+skribe-test() (
+  set -euxo pipefail
+  skribe-exec ./test.sh
+)
+
+skribe-stop() (
+  set -euxo pipefail
+  docker rm --force "${CONTAINER}" >/dev/null 2>&1
 )
 
 skribe-shell() (
