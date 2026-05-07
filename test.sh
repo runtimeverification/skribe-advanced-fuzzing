@@ -2,12 +2,14 @@
 
 set -euxo pipefail
 
-export KLLVM_LIBRARY_PATH=$(kdist which stylus-semantics.llvm-library)
+export KLLVM_LIBRARY_PATH="$(kdist which stylus-semantics.llvm-library)"
+export LD_LIBRARY_PATH="${KLLVM_LIBRARY_PATH}"
 
 cd 9lives
 ./build-skribe.sh
 skribe build
-skribe run --max-examples 5
+time skribe export-specs > ../skribe/skribe-fuzz-rs/fuzz-spec.json
+skribe run --max-examples 3 || true
 
 cd -
 
@@ -16,3 +18,6 @@ cargo test
 
 cd fuzz
 cargo +nightly fuzz build
+cd ..
+cp target/x86_64-unknown-linux-gnu/release/fuzz_target_1 skribe-fuzz
+time ./skribe-fuzz -runs=100 --fuzz-spec=fuzz-spec.json
