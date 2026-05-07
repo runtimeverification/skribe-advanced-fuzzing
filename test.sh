@@ -20,4 +20,4 @@ cd fuzz
 cargo +nightly fuzz build
 cd ..
 cp target/x86_64-unknown-linux-gnu/release/fuzz_target_1 skribe-fuzz
-time ./skribe-fuzz -runs=100 --fuzz-spec=fuzz-spec.json
+time ./skribe-fuzz -runs=100 --fuzz-spec=fuzz-spec.json --contract-name=TestSkribeEndToEnd --function-name=test_end_to_end_intense
