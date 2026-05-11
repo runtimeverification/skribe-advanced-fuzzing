@@ -36,9 +36,6 @@ skribe-start() (
   # Copy files while setting ownership to match the guest. Why `-a` works: https://github.com/docker/cli/issues/6870.
   docker cp --archive deps/. "${CONTAINER}:/home/user/"
   docker cp --archive test.sh "${CONTAINER}:/home/user/"
-
-  skribe-exec mkdir /home/user/skribe/skribe-fuzz-rs/.cargo
-  docker cp --archive config.toml "${CONTAINER}:/home/user/skribe/skribe-fuzz-rs/.cargo/"
 )
 
 skribe-exec() (
