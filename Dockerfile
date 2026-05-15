@@ -46,5 +46,7 @@ COPY ${SKRIBE_DIST} .
 RUN pip install --break-system-packages *.whl \
  && rm *.whl
 
-RUN kdist --verbose build -j2 stylus-semantics.* \
- && skribe --help
+RUN _JAVA_OPTIONS="-Xmx32g -XX:+UseZGC" kdist --verbose build evm-semantics.plugin
+RUN _JAVA_OPTIONS="-Xmx32g -XX:+UseZGC" kdist --verbose build stylus-semantics.llvm
+RUN _JAVA_OPTIONS="-Xmx32g -XX:+UseZGC" kdist --verbose build stylus-semantics.llvm-library
+RUN skribe --help
