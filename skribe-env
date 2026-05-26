@@ -2,8 +2,7 @@ SKRIBE_PATH=deps/skribe
 CONTRACT_PATH=deps/9lives
 
 DOCKERFILE=./Dockerfile
-VERSION=$(git rev-parse --short=7 HEAD)
-TAG=runtimeverificationinc/skribe-advanced-fuzzing:${VERSION}
+TAG=runtimeverificationinc/skribe-advanced-fuzzing:demo-m4
 CONTAINER=skribe-advanced-fuzzing
 K_VERSION=$(cat "${SKRIBE_PATH}/deps/k_release")
 UV_VERSION=$(cat "${SKRIBE_PATH}/deps/uv_release")
